@@ -67,7 +67,7 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
   const price = Number(product.price);
   const weightKg = product.weight_grams ? product.weight_grams / 1000 : 0.5;
   const serviceFee = Math.round((price * PLATFORM_FEE_PERCENT) / 100);
-  const isSelfDelivery = product.delivery_type === "self";
+  const isSelfDelivery = product.delivery_type !== "auto";
   const effectiveShipping = isSelfDelivery
     ? Number(product.delivery_charge ?? 0)
     : (dynamicShipping ?? Number(product.delivery_charge ?? 0));
