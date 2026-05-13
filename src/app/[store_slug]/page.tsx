@@ -4,6 +4,7 @@ import Image from "next/image";
 import { createClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
 import SellerAvatar from "./SellerAvatar";
+import OpenInAppBanner from "./OpenInAppBanner";
 
 export const revalidate = 60;
 
@@ -215,6 +216,8 @@ export default async function StorefrontPage({ params }: Props) {
           </section>
         )}
       </main>
+
+      <OpenInAppBanner storeSlug={store_slug} />
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}
       <footer className="mt-16 sm:mt-24 border-t border-gray-200 bg-white">
