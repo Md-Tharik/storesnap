@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-export default function OpenInAppBanner({ storeSlug }: { storeSlug: string }) {
+const PLAY_STORE_URL =
+  "https://play.google.com/store/apps/details?id=in.storesnap.storesnap_app";
+
+export default function OpenInAppBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -13,11 +16,6 @@ export default function OpenInAppBanner({ storeSlug }: { storeSlug: string }) {
   }, []);
 
   if (!visible) return null;
-
-  const intentUrl =
-    `intent://store/${storeSlug}#Intent;scheme=storesnap;` +
-    `package=in.storesnap.storesnap_app;` +
-    `S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Din.storesnap.storesnap_app;end`;
 
   function dismiss() {
     localStorage.setItem("app-banner-dismissed", "1");
@@ -34,14 +32,16 @@ export default function OpenInAppBanner({ storeSlug }: { storeSlug: string }) {
         className="h-7 w-auto shrink-0"
       />
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-semibold text-gray-900 leading-tight">Open in StoreSnap</p>
-        <p className="text-xs text-gray-400">Better experience in the app</p>
+        <p className="text-sm font-semibold text-gray-900 leading-tight">Track your order</p>
+        <p className="text-xs text-gray-400">Download the StoreSnap app</p>
       </div>
       <a
-        href={intentUrl}
-        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shrink-0 transition-colors"
+        href={PLAY_STORE_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3.5 py-2 rounded-lg shrink-0 transition-colors whitespace-nowrap"
       >
-        Open
+        Get App
       </a>
       <button
         onClick={dismiss}
