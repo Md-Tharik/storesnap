@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "in.storesnap.storesnap_app",
       "sha256_cert_fingerprints": [
-        "4F:18:7B:49:94:AF:A4:CD:FB:C9:18:D8:00:25:EB:0D:0E:57:7C:EB:51:7E:1B:E1:57:D7:65:29:16:EA:D6:24"
+        "4F:18:7B:49:94:AF:A4:CD:FB:C9:18:D8:00:25:EB:0D:0E:57:7C:EB:51:7E:1B:E1:57:D7:65:29:16:EA:D6:24",
+        "57:5E:5B:2C:92:9F:EE:20:3E:2F:0D:54:A4:9A:EA:6C:C5:8C:FE:42:0E:28:4E:6F:AE:17:3D:29:F2:96:23:D1"
       ]
     }
   }
