@@ -81,7 +81,6 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
   }
 
   async function fetchShipping(pincode: string) {
-    console.log("[checkout] delivery_type:", product.delivery_type, "isSelfDelivery:", isSelfDelivery);
     if (isSelfDelivery) return;
     setShippingLoading(true);
     try {
