@@ -5,6 +5,8 @@ import { createClient } from "@supabase/supabase-js";
 import type { Metadata } from "next";
 import SellerAvatar from "./SellerAvatar";
 
+export const revalidate = 60;
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface Seller {
