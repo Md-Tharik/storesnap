@@ -67,7 +67,10 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
   const price = Number(product.price);
   const weightKg = product.weight_grams ? product.weight_grams / 1000 : 0.5;
   const serviceFee = Math.round((price * PLATFORM_FEE_PERCENT) / 100);
-  const effectiveShipping = dynamicShipping ?? Number(product.delivery_charge ?? 0);
+  const isSelfDelivery = product.delivery_type === "self";
+  const effectiveShipping = isSelfDelivery
+    ? Number(product.delivery_charge ?? 0)
+    : (dynamicShipping ?? Number(product.delivery_charge ?? 0));
   const total = price + effectiveShipping + serviceFee;
 
   // True while the user has started typing a pincode but hasn't reached 6 digits yet
@@ -118,12 +121,13 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
     setShippingError(null);
 
     if (val.length < 6) {
-      // Partial pincode — reset only, button will be hidden via pincodePartial
       return;
     }
 
+    // Self-delivery: seller handles shipping at fixed rate — no API needed
+    if (isSelfDelivery) return;
+
     if (!/^[1-9][0-9]{5}$/.test(val)) {
-      // 6 digits but starts with 0 — not a valid Indian pincode
       setShippingError("Standard shipping is only available within India.");
       return;
     }
@@ -140,13 +144,15 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
       setError("Please complete your 6-digit delivery pincode.");
       return;
     }
-    if (shippingError) {
-      setError("Please enter a valid Indian delivery pincode to continue.");
-      return;
-    }
-    if (form.pincode.length === 6 && dynamicShipping === null && !shippingLoading) {
-      setError("Shipping rate could not be calculated. Please check the pincode.");
-      return;
+    if (!isSelfDelivery) {
+      if (shippingError) {
+        setError("Please enter a valid Indian delivery pincode to continue.");
+        return;
+      }
+      if (form.pincode.length === 6 && dynamicShipping === null && !shippingLoading) {
+        setError("Shipping rate could not be calculated. Please check the pincode.");
+        return;
+      }
     }
 
     setLoading(true);
@@ -399,7 +405,11 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
           {/* Shipping row */}
           <div className="flex justify-between text-gray-500 items-center min-h-[1.5rem]">
             <span>Shipping</span>
-            {shippingLoading ? (
+            {isSelfDelivery ? (
+              <span className={effectiveShipping === 0 ? "" : "text-indigo-600 font-medium"}>
+                {effectiveShipping === 0 ? "Free" : `₹${effectiveShipping.toLocaleString("en-IN")}`}
+              </span>
+            ) : shippingLoading ? (
               <span className="flex items-center gap-1.5 text-indigo-500 text-xs">
                 <Spinner className="h-3.5 w-3.5" />
                 Calculating best rates…
@@ -415,10 +425,12 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
             )}
           </div>
 
-          {/* Caption: live rate (real Shiprocket) or silent for fallback */}
-          {dynamicShipping !== null && !shippingLoading && !isFallbackRate && (
+          {/* Caption */}
+          {isSelfDelivery ? (
+            <p className="text-[11px] text-gray-400 -mt-1">Delivered by seller</p>
+          ) : dynamicShipping !== null && !shippingLoading && !isFallbackRate ? (
             <p className="text-[11px] text-gray-400 -mt-1">Live rate via Shiprocket</p>
-          )}
+          ) : null}
 
           {/* Platform service fee */}
           <div className="flex justify-between text-gray-500">
@@ -443,7 +455,7 @@ export default function CheckoutForm({ product, sellerId, sellerName, sellerPinc
         ) : (
           <button
             type="submit"
-            disabled={loading || shippingLoading || !!shippingError}
+            disabled={loading || (!isSelfDelivery && (shippingLoading || !!shippingError))}
             className="w-full bg-indigo-600 hover:bg-indigo-700 active:scale-[0.99] text-white
                        font-semibold py-3.5 rounded-xl transition-all duration-150
                        disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-sm
