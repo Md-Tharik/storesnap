@@ -5,18 +5,14 @@ import { createServiceClient } from "@/lib/supabase";
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  // Top-level order fields
+  // Top-level order fields — prices are NOT trusted from client; recomputed from DB below
   const {
     razorpay_payment_id,
     razorpay_order_id,
     razorpay_signature,
     product_id,
     seller_id,
-    item_price,
     shipping_paid_by_buyer,
-    platform_commission,
-    seller_payout_amount,
-    total_paid,
     shipping_address, // { name, email, phone, address_line1, ... }
   } = body;
 
@@ -67,17 +63,40 @@ export async function POST(req: NextRequest) {
   // Use service-role client to bypass RLS — guest buyers are unauthenticated
   const supabase = createServiceClient();
 
+  // Validate the product exists and belongs to the claimed seller — never trust client prices
+  const { data: dbProduct } = await supabase
+    .from("products")
+    .select("price, seller_id, is_active")
+    .eq("id", product_id)
+    .eq("seller_id", seller_id)
+    .eq("is_active", true)
+    .maybeSingle();
+
+  if (!dbProduct) {
+    return NextResponse.json(
+      { error: "Product not found or seller mismatch." },
+      { status: 400 }
+    );
+  }
+
+  // Recompute amounts server-side from the real product price
+  const realItemPrice = Number(dbProduct.price);
+  const realCommission = Math.round((realItemPrice * 3) / 100);
+  const realSellerPayout = realItemPrice;
+  // shipping_paid_by_buyer comes from client; it was baked into the Razorpay order amount
+  const realTotal = realItemPrice + (Number(shipping_paid_by_buyer) || 0) + realCommission;
+
   // payout_method and payout_eligible_at are overridden by the DB trigger process_order_rules()
   const { data: inserted, error } = await supabase
     .from("orders")
     .insert({
       product_id,
       seller_id,
-      item_price,
+      item_price: realItemPrice,
       shipping_paid_by_buyer,
-      platform_commission: platform_commission ?? 0,
-      seller_payout_amount: seller_payout_amount ?? item_price,
-      total_paid,
+      platform_commission: realCommission,
+      seller_payout_amount: realSellerPayout,
+      total_paid: realTotal,
       razorpay_order_id,
       razorpay_payment_id,
       buyer_email,

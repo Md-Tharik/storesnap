@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
+  // Defense-in-depth: verify admin cookie even though middleware already checks it
+  const token = req.cookies.get("admin_token")?.value;
+  if (!process.env.ADMIN_SECRET || token !== process.env.ADMIN_SECRET) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const body = await req.json();
   const { seller_id, payout_amount } = body as {
     seller_id?: string;
