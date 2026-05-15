@@ -168,15 +168,27 @@ export default function LandingPage() {
             {/* Google Play — active */}
             <a
               href="#"
-              className="active:scale-[0.97] transition-transform duration-150 shrink-0"
+              className="group w-full sm:w-auto flex items-center justify-center gap-3
+                         bg-black hover:bg-neutral-900 active:scale-[0.97] text-white
+                         px-5 py-3 sm:px-6 sm:py-3.5 rounded-2xl
+                         border border-white/20 hover:border-white/40
+                         transition-all duration-150 shadow-xl shadow-black/40"
             >
               <Image
-                src="/playstore-logo.jpg"
-                alt="Get it on Google Play"
-                width={200}
-                height={60}
-                className="h-[54px] w-auto"
+                src="/playstore-logo.png"
+                alt="Google Play"
+                width={28}
+                height={28}
+                className="shrink-0"
               />
+              <span className="text-left">
+                <span className="block text-[10px] text-white/55 font-medium leading-none mb-0.5 tracking-wide">
+                  GET IT ON
+                </span>
+                <span className="block text-[16px] font-semibold leading-none tracking-tight">
+                  Google Play
+                </span>
+              </span>
             </a>
 
             {/* App Store — coming soon / disabled */}
@@ -319,15 +331,26 @@ export default function LandingPage() {
           </p>
           <a
             href="#download"
-            className="mt-8 inline-block active:scale-[0.97] transition-transform duration-150"
+            className="mt-8 inline-flex items-center gap-3
+                       bg-black hover:bg-neutral-900 active:scale-[0.97] text-white
+                       px-6 py-3.5 rounded-2xl border border-white/20 hover:border-white/40
+                       transition-all duration-150 shadow-xl shadow-black/40"
           >
             <Image
-              src="/playstore-logo.jpg"
-              alt="Get it on Google Play"
-              width={200}
-              height={60}
-              className="h-[54px] w-auto"
+              src="/playstore-logo.png"
+              alt="Google Play"
+              width={28}
+              height={28}
+              className="shrink-0"
             />
+            <span className="text-left">
+              <span className="block text-[10px] text-white/55 font-medium leading-none mb-0.5 tracking-wide">
+                GET IT ON
+              </span>
+              <span className="block text-[16px] font-semibold leading-none tracking-tight">
+                Google Play
+              </span>
+            </span>
           </a>
         </div>
       </section>
