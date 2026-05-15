@@ -1,9 +1,17 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { createServiceClient } from "@/lib/supabase";
 import PayoutsClient, { type SellerPayout } from "./PayoutsClient";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPayoutsPage() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("admin_token")?.value;
+  if (!process.env.ADMIN_SECRET || token !== process.env.ADMIN_SECRET) {
+    redirect("/admin/login");
+  }
+
   const supabase = createServiceClient();
 
   const { data: orders, error } = await supabase
