@@ -168,18 +168,15 @@ export default function LandingPage() {
             {/* Google Play — active */}
             <a
               href="#"
-              className="group w-full sm:w-auto flex items-center justify-center gap-3
-                         bg-white hover:bg-gray-50 active:scale-[0.97] text-gray-900
-                         px-5 py-3.5 sm:px-6 sm:py-4 rounded-2xl font-semibold
-                         transition-all duration-150 shadow-xl shadow-black/25"
+              className="active:scale-[0.97] transition-transform duration-150 shrink-0"
             >
-              <PlayStoreSvg />
-              <span className="text-left">
-                <span className="block text-[10px] text-gray-500 font-medium leading-none mb-0.5">
-                  Download on
-                </span>
-                <span className="block text-[15px] font-bold leading-none">Google Play</span>
-              </span>
+              <Image
+                src="/playstore-logo.jpg"
+                alt="Get it on Google Play"
+                width={200}
+                height={60}
+                className="h-[54px] w-auto"
+              />
             </a>
 
             {/* App Store — coming soon / disabled */}
@@ -322,13 +319,15 @@ export default function LandingPage() {
           </p>
           <a
             href="#download"
-            className="mt-8 inline-flex items-center gap-3 bg-indigo-600 hover:bg-indigo-500
-                       active:scale-[0.97] text-white font-bold px-7 py-4 rounded-2xl
-                       transition-all duration-150 text-sm sm:text-base
-                       shadow-xl shadow-indigo-900/30"
+            className="mt-8 inline-block active:scale-[0.97] transition-transform duration-150"
           >
-            <PlayStoreSvg white />
-            Download on Google Play
+            <Image
+              src="/playstore-logo.jpg"
+              alt="Get it on Google Play"
+              width={200}
+              height={60}
+              className="h-[54px] w-auto"
+            />
           </a>
         </div>
       </section>
@@ -361,35 +360,6 @@ export default function LandingPage() {
 }
 
 // ── SVG Icons ─────────────────────────────────────────────────────────────────
-
-function PlayStoreSvg({ white = false }: { white?: boolean }) {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 512 512"
-      className="shrink-0"
-      aria-hidden="true"
-    >
-      <path
-        d="M48 32L288 256 48 480a32 32 0 01-16-28V60A32 32 0 0148 32z"
-        fill={white ? "#fff" : "#34A853"}
-      />
-      <path
-        d="M288 256l96-96 72 41.6a32 32 0 010 54.8L384 352z"
-        fill={white ? "rgba(255,255,255,0.8)" : "#FBBC05"}
-      />
-      <path
-        d="M48 32l240 224L192 352 48 480z"
-        fill={white ? "rgba(255,255,255,0.55)" : "#EA4335"}
-      />
-      <path
-        d="M192 160l96 96-96 96L48 32z"
-        fill={white ? "rgba(255,255,255,0.75)" : "#4285F4"}
-      />
-    </svg>
-  );
-}
 
 function AppleSvg() {
   return (
