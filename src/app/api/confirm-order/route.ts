@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
               id: inserted.id,
               buyer_email,
               buyer_name,
-              total_paid,
+              total_paid: realTotal,
               payment_status: "paid",
               seller_name: sellerName,
             },
