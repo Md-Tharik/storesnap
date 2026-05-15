@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             user_id: seller_id,
             title: "New Order! 💸",
-            body: `You received a new order for ₹${total_paid}`,
+            body: `You received a new order for ₹${realTotal}`,
           }),
         }
       );
